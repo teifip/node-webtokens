@@ -2,7 +2,7 @@
 
 Simple, opinionated implementation of [JWS](https://tools.ietf.org/html/rfc7515) and [JWE](https://tools.ietf.org/html/rfc7516) compact serialization.
 
-#### Simple
+### Simple
 
 All functions exposed through a single set of straightforward APIs.
 
@@ -57,7 +57,7 @@ token = jwt.generate(alg, payload, keystore, kid);
 parsedToken = jwt.parse(token).verify(keystore);
 ```
 
-#### Opinionated
+### Opinionated
 
 There are various packages in [npm](https://www.npmjs.com/) that cover the [IETF JOSE](https://datatracker.ietf.org/wg/jose/documents/) scope striving for generality and flexibility. This specific package is shaped after the following strong assumptions, which somehow restrict its usability:
 
@@ -66,13 +66,13 @@ There are various packages in [npm](https://www.npmjs.com/) that cover the [IETF
 - The `iat` claim is automatically added to the payload at token generation time, and comes in the form of a Unix timestamp (number of seconds);
 - The [JWS](https://tools.ietf.org/html/rfc7515)/[JWE](https://tools.ietf.org/html/rfc7516) header is automatically generated at token generation time, with limited control by the user.
 
-#### Installation
+### Installation
 
 ```
 npm install node-webtokens --save
 ```
 
-#### Supported JWS algorithms
+### Supported JWS algorithms
 
 | Algorithm | Minimum key requirements                                                 |
 |:----------|:-------------------------------------------------------------------------|
@@ -88,7 +88,7 @@ npm install node-webtokens --save
 
 *Table 1 - List of JWS algorithms*
 
-#### Supported JWE key management algorithms
+### Supported JWE key management algorithms
 
 | Algorithm            | Minimum key requirements                                                   |
 |:---------------------|:---------------------------------------------------------------------------|
@@ -103,7 +103,7 @@ npm install node-webtokens --save
 
 *Table 2 - List of JWE key management algorithms*
 
-#### Supported JWE content encryption algorithms
+### Supported JWE content encryption algorithms
 
 | Algorithm       | Minimum key requirements (*)                                 |
 |:----------------|:-------------------------------------------------------------|
@@ -118,7 +118,7 @@ npm install node-webtokens --save
 
 (*) These requirements are relevant only when direct content encryption is used (key management algorithm equal to `dir`). In all the other cases, the [JWE](https://tools.ietf.org/html/rfc7516) generation API takes care of generating a single-use content encryption key of appropriate length.
 
-#### Synchronous vs. asynchronous
+### Synchronous vs. asynchronous
 
 The token generation API and token verification API can both be used in either synchronous or asynchronous mode. Example:
 
@@ -139,7 +139,7 @@ All the [Node.js](https://nodejs.org) crypto functions used in this package are 
 
 > Use of the token generation and token verification APIs in asynchronous mode is recommended for [JWE](https://tools.ietf.org/html/rfc7516) when the selected key management algorithm is `PBES2-HS256+A128KW`, `PBES2-HS384+A192KW` or `PBES2-HS512+A256KW`.
 
-#### Token generation
+### Token generation
 
 Single API, supporting two slightly different usage patterns, each with synchronous and asynchronous mode:
 
@@ -157,7 +157,7 @@ When the `keystore` / `kid` pattern is used, the `kid` claim is automatically ad
 
 When used in synchronous mode, the token generation API returns the token as string. When used in asynchronous mode, the `callback` function is invoked with parameters `(error, token)`.
 
-#### Token parsing and verification/decryption
+### Token parsing and verification/decryption
 
 Token parsing and token verification/decryption are supported through chainable methods.
 
@@ -240,7 +240,7 @@ if (parsedToken.error) {
 }
 ```
 
-#### Examples
+### Examples
 
 Token generated/verified with individual key:
 
@@ -418,6 +418,6 @@ jwt.parse(token).setTokenLifetime(600).verify(key, (error, parsed) => {
 
 > With [PBES2](https://tools.ietf.org/html/rfc7518#section-4.8), key derivation at token verification time performs the number of [PBKDF2](https://tools.ietf.org/html/rfc8018) iterations indicated by the `p2c` claim in the [JWE](https://tools.ietf.org/html/rfc7516) header. For protection against bogus tokens, the token verification API rejects `p2c` values larger than 1000 when used in synchronous mode or 10000 when used in asynchronous mode.
 
-#### Credits
+### Credits
 
 The JavaScript code used for ECDSA signature conversion from DER to concatenated and vice-versa is directly derived from the [ecdsa-sig-formatter](https://github.com/Brightspace/node-ecdsa-sig-formatter) module.

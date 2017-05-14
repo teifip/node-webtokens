@@ -68,7 +68,7 @@ There are various packages in [npm](https://www.npmjs.com/) that cover the [IETF
 
 #### Installation
 
-````
+```
 npm install node-webtokens --save
 ```
 

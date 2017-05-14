@@ -1,0 +1,19 @@
+{
+  "name": "node-webtokens",
+  "version": "0.0.1",
+  "description": "Simple, opinionated implementation of JWS and JWE compact serialization",
+  "main": "index.js",
+  "keywords": [
+    "JWS",
+    "JWE",
+    "JWT",
+    "JOSE",
+    "JSON",
+    "token"
+  ],
+  "engines": {
+    "node": ">=6.6.0"
+  },
+  "author": "Paolo Fiorini <teifip@gmail.com>",
+  "license": "MIT"
+}

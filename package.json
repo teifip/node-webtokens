@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Simple, opinionated implementation of JWS and JWE compact serialization",
   "main": "index.js",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/teifip/node-webtokens.git"
+  },
   "keywords": [
     "JWS",
     "JWE",
@@ -14,6 +18,10 @@
   "engines": {
     "node": ">=6.6.0"
   },
+  "bugs": {
+    "url": "https://github.com/teifip/node-webtokens/issues"
+  },
+  "homepage": "https://github.com/teifip/node-webtokens#readme",
   "author": "Paolo Fiorini <teifip@gmail.com>",
   "license": "MIT"
 }

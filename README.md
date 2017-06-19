@@ -170,7 +170,7 @@ The token parsing API is invoked with the token (string) as input and returns a 
 - `header` - Token header as JavaScript object; not present if the token header could not be parsed;
 - `payload` - Token payload as JavaScript object; present only for [JWS](https://tools.ietf.org/html/rfc7515) tokens and in absence of errors; for [JWE](https://tools.ietf.org/html/rfc7516) tokens the payload gets added to the `ParsedToken` object after decryption, which is performed when the token verification API is invoked.
 
-The token parsing A does not throw errors. Any error condition encountered during parsing is reported in the `error` object.
+Token parsing never throws errors. Any error condition encountered during parsing is reported in the `error` object.
 
 **parsedToken.setTokenLifetime(lifetime)**
 

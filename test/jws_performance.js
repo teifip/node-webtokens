@@ -36,27 +36,36 @@ var cases = [
 ];
 
 var start;
-var elapsed;
+var delta;
 var token;
 var result;
 
 console.log(`\nGENERATION OF ${ITER} TOKENS\n`);
 for (let i in cases) {
-  start = Date.now();
+  start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
     token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
   }
-  elapsed = Date.now() - start;
-  console.log(`${cases[i].alg} in ${elapsed} ms`);
+  delta = process.hrtime(start);
+  console.log(`${cases[i].alg} in ${formatResult(delta)}`);
 }
 
 console.log(`\nVERIFICATION OF ${ITER} TOKENS\n`);
 for (let i in cases) {
   token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
-  start = Date.now();
+  start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
     result = jwt.parse(token).setTokenLifetime(60000).verify(cases[i].vKey);
   }
-  elapsed = Date.now() - start;
-  console.log(`${cases[i].alg} in ${elapsed} ms`);
+  delta = process.hrtime(start);
+  console.log(`${cases[i].alg} in ${formatResult(delta)}`);
+}
+
+function formatResult(delta) {
+  var ms = delta[0] * 1e3 + delta[1] * 1e-6;
+  if (ms < 1000) {
+    return `${ms.toFixed(1)} ms`;
+  } else {
+    return `${(ms / 1000).toFixed(3)} s`;
+  }
 }

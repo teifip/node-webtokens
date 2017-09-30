@@ -79,12 +79,12 @@ npm install node-webtokens --save
 | `HS256` | 32-octet key, passed either as base64 string or as buffer; same key for token generation and token verification |
 | `HS384` | 48-octet key, passed either as base64 string or as buffer; same key for token generation and token verification |
 | `HS512` | 64-octet key, passed either as base64 string or as buffer; same key for token generation and token verification |
-| `RS256` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification |
-| `RS384` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification |
-| `RS512` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification |
-| `ES256` | P-256 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification; P-256 keys are identified as `prime256v1` in OpenSSL |
-| `ES384` | P-384 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification; P-384 keys are identified as `secp384r1` in OpenSSL |
-| `ES512` | P-521 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key for token verification; P-521 keys are identified as `secp521r1` in OpenSSL |
+| `RS256` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification |
+| `RS384` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification |
+| `RS512` | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification |
+| `ES256` | P-256 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification; P-256 keys are identified as `prime256v1` in OpenSSL |
+| `ES384` | P-384 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification; P-384 keys are identified as `secp384r1` in OpenSSL |
+| `ES512` | P-521 EC key in PEM format, passed either as UTF-8 string or as buffer; private key for token generation, public key or certificate for token verification; P-521 keys are identified as `secp521r1` in OpenSSL |
 
 *Table 1 - List of JWS algorithms*
 

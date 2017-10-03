@@ -92,7 +92,7 @@ npm install node-webtokens --save
 
 | Algorithm            | Minimum key requirements                                                   |
 |:---------------------|:---------------------------------------------------------------------------|
-| `RSA-OAEP`           | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; public key for token generation, private key for token decryption |
+| `RSA-OAEP`           | 2048-bit RSA key in PEM format, passed either as UTF-8 string or as buffer; public key or certificate for token generation, private key for token decryption |
 | `A128KW`             | 16-octet key, passed either as base64 string or as buffer; same key for token generation and token decryption |
 | `A192KW`             | 24-octet key, passed either as base64 string or as buffer; same key for token generation and token decryption |
 | `A256KW`             | 32-octet key, passed either as base64 string or as buffer; same key for token generation and token decryption |

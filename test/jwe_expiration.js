@@ -3,9 +3,9 @@ const jwt = require('../index.js');
 
 const KEYS_DIR = __dirname + '/pem_keys/';
 
-var key = crypto.randomBytes(64);
+const key = crypto.randomBytes(64);
 
-var payload = {
+const payload = {
   iss: 'auth.mydomain.com',
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',
@@ -14,7 +14,7 @@ var payload = {
   exp: Math.floor(Date.now() / 1000) + 4  // expires in 4 seconds
 }
 
-var token = jwt.generate('dir', 'A256CBC-HS512', payload, key);
+let token = jwt.generate('dir', 'A256CBC-HS512', payload, key);
 
 testExpirationByIatSync(() => {
   testExpirationByIatAsync(() => {
@@ -28,7 +28,7 @@ testExpirationByIatSync(() => {
 
 function testExpirationByIatSync(callback) {
   setTimeout(() => {
-    var parsed = jwt.parse(token).setTokenLifetime(1).verify(key);
+    let parsed = jwt.parse(token).setTokenLifetime(1).verify(key);
     if (parsed.expired && parsed.expired === parsed.payload.iat + 1) {
       console.log('\n[OK] Expiration by iat; synchronous verification API');
       callback();
@@ -55,7 +55,7 @@ function testExpirationByIatAsync(callback) {
 
 function testExpirationByExpSync(callback) {
   setTimeout(() => {
-    var parsed = jwt.parse(token).setTokenLifetime(60).verify(key);
+    let parsed = jwt.parse(token).setTokenLifetime(60).verify(key);
     if (parsed.expired && parsed.expired === parsed.payload.exp) {
       console.log('[OK] Expiration by exp; synchronous verification API');
       callback();

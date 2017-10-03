@@ -14,7 +14,7 @@ exports.generate = function(alg, p1, p2, p3, p4, p5) {
     return jwe.generate(alg, p1, p2, p3, p4, p5);
   }
   // there is no payload where expected
-  var error = new TypeError('Invalid payload');
+  let error = new TypeError('Invalid payload');
   if (typeof p5 === 'function') {
     p5(error);
   } else if (typeof p4 === 'function') {
@@ -112,14 +112,14 @@ ParsedToken.prototype.setIssuer = function(issList) {
 ParsedToken.prototype.verify = function(p0, cb) {
   // key[, cb] or keystore[, cb]
   cb = typeof cb === 'function' ? cb : undefined;
-  var key;
+  let key;
   if (p0.constructor !== {}.constructor) {
     key = p0;
-  } else if (!this.header.kid) {
+  } else if (this.header.kid === undefined) {
     // cannot extract key from keystore
     this.error = { message: 'Missing kid claim in header' }
     return responder(null, this, cb);
-  } else if (!p0[this.header.kid]) {
+  } else if (p0[this.header.kid] === undefined) {
     // key not found in keystore
     this.error = { message: 'Key with id not found', kid: this.header.kid };
     return responder(null, this, cb);

@@ -3,17 +3,17 @@ const jwt = require('../index.js');
 
 const KEYS_DIR = __dirname + '/pem_keys/';
 
-var key = crypto.randomBytes(64);
+const key = crypto.randomBytes(64);
 
-var payload = {
+const payload = {
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
   list: [1, 2, 3]
 }
 
-var token = jwt.generate('HS512', payload, key);
+let token = jwt.generate('HS512', payload, key);
 
-var parsed = jwt.parse(token)
+let parsed = jwt.parse(token)
                 .setAudience('A1B2C3D4E5.com.mydomain.myservice')
                 .verify(key);
 

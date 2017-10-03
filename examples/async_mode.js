@@ -1,9 +1,9 @@
 const crypto = require('crypto');
 const jwt = require('../index.js');
 
-var key = crypto.randomBytes(64);
+const key = crypto.randomBytes(64);
 
-var payload = {
+const payload = {
   iss: 'auth.mydomain.com',
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',

@@ -4,18 +4,18 @@ const jwt = require('../index.js');
 
 const KEYS_DIR = __dirname + '/pem_keys/';
 
-var simKey = crypto.randomBytes(64);
-var pwd = 'My very secret password';
-var priRsa = fs.readFileSync(KEYS_DIR + 'priRsa.key');
-var pubRsa = fs.readFileSync(KEYS_DIR + 'pubRsa.key');
-var priEc256 = fs.readFileSync(KEYS_DIR + 'priEc256.key');
-var pubEc256 = fs.readFileSync(KEYS_DIR + 'pubEc256.key');
-var priEc384 = fs.readFileSync(KEYS_DIR + 'priEc384.key');
-var pubEc384 = fs.readFileSync(KEYS_DIR + 'pubEc384.key');
-var priEc521 = fs.readFileSync(KEYS_DIR + 'priEc521.key');
-var pubEc521 = fs.readFileSync(KEYS_DIR + 'pubEc521.key');
+const simKey = crypto.randomBytes(64);
+const pwd = 'My very secret password';
+const priRsa = fs.readFileSync(KEYS_DIR + 'priRsa.key');
+const pubRsa = fs.readFileSync(KEYS_DIR + 'pubRsa.key');
+const priEc256 = fs.readFileSync(KEYS_DIR + 'priEc256.key');
+const pubEc256 = fs.readFileSync(KEYS_DIR + 'pubEc256.key');
+const priEc384 = fs.readFileSync(KEYS_DIR + 'priEc384.key');
+const pubEc384 = fs.readFileSync(KEYS_DIR + 'pubEc384.key');
+const priEc521 = fs.readFileSync(KEYS_DIR + 'priEc521.key');
+const pubEc521 = fs.readFileSync(KEYS_DIR + 'pubEc521.key');
 
-var payload = {
+const payload = {
   iss: 'auth.mydomain.com',
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',
@@ -23,7 +23,7 @@ var payload = {
   list: [1, 2, 3]
 }
 
-var cases = [
+const cases = [
   {
     alg: 'dir',
     enc: 'A128CBC-HS256',
@@ -1371,8 +1371,8 @@ var cases = [
 ];
 
 console.log('\nBASIC TEST CASES - SYNCHRONOUS MODE\n');
-var token;
-var result;
+let token;
+let result;
 for (let i in cases) {
   token = jwt.generate(cases[i].alg, cases[i].enc, payload, cases[i].eKey);
   result = jwt.parse(token)

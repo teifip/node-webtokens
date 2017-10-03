@@ -12,17 +12,17 @@ try {
   process.exit();
 }
 
-var simKey = crypto.randomBytes(64);
-var priRsa = fs.readFileSync(KEYS_DIR + 'priRsa.key');
-var pubRsa = fs.readFileSync(KEYS_DIR + 'pubRsa.key');
-var priEc256 = fs.readFileSync(KEYS_DIR + 'priEc256.key');
-var pubEc256 = fs.readFileSync(KEYS_DIR + 'pubEc256.key');
-var priEc384 = fs.readFileSync(KEYS_DIR + 'priEc384.key');
-var pubEc384 = fs.readFileSync(KEYS_DIR + 'pubEc384.key');
-var priEc521 = fs.readFileSync(KEYS_DIR + 'priEc521.key');
-var pubEc521 = fs.readFileSync(KEYS_DIR + 'pubEc521.key');
+const simKey = crypto.randomBytes(64);
+const priRsa = fs.readFileSync(KEYS_DIR + 'priRsa.key');
+const pubRsa = fs.readFileSync(KEYS_DIR + 'pubRsa.key');
+const priEc256 = fs.readFileSync(KEYS_DIR + 'priEc256.key');
+const pubEc256 = fs.readFileSync(KEYS_DIR + 'pubEc256.key');
+const priEc384 = fs.readFileSync(KEYS_DIR + 'priEc384.key');
+const pubEc384 = fs.readFileSync(KEYS_DIR + 'pubEc384.key');
+const priEc521 = fs.readFileSync(KEYS_DIR + 'priEc521.key');
+const pubEc521 = fs.readFileSync(KEYS_DIR + 'pubEc521.key');
 
-var payload = {
+const payload = {
   iss: 'auth.mydomain.com',
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',
@@ -30,7 +30,7 @@ var payload = {
   list: [1, 2, 3]
 }
 
-var cases = [
+const cases = [
   {alg: 'HS256', sKey: simKey, vKey: simKey},
   {alg: 'HS384', sKey: simKey, vKey: simKey},
   {alg: 'HS512', sKey: simKey, vKey: simKey},
@@ -42,9 +42,9 @@ var cases = [
   {alg: 'ES512', sKey: priEc521, vKey: pubEc521}
 ];
 
-var token;
-var parsed;
-var result;
+let token;
+let parsed;
+let result;
 
 console.log('\nGENERATION WITH node-webtokens / VERIFICATION WITH jws\n');
 for (let i in cases) {

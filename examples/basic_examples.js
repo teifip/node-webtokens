@@ -1,9 +1,9 @@
 const crypto = require('crypto');
 const jwt = require('../index.js');
 
-var key = crypto.randomBytes(64);
+const key = crypto.randomBytes(64);
 
-var payload = {
+const payload = {
   iss: 'auth.mydomain.com',
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',
@@ -13,17 +13,17 @@ var payload = {
 
 console.log('\nTOKEN GENERATED/VERIFIED WITH INDIVIDUAL KEY\n');
 
-var token = jwt.generate('HS512', payload, key);
+let token = jwt.generate('HS512', payload, key);
 console.log(token);
 
-var parsed = jwt.parse(token).verify(key);
+let parsed = jwt.parse(token).verify(key);
 console.log(parsed.valid);
 console.log(parsed.header);
 console.log(parsed.payload);
 
 console.log('\nTOKEN GENERATED/VERIFIED WITH KEYSTORE KEY\n');
 
-var keystore = {
+let keystore = {
   'e5739df2261c8a0ed41715e7f62cc295': 'SATKcp7AMnCg0YdEBPIcgknBplYttePtQoRddpJjyVak9F5vEp/7pL0Q1236MkVQd7nIXGoaPt4w1dlrpEmY4A==',
   'f0fd89c4abe83811ee9afa92d0d687f7': '6Bzisgmhj9LGJDNjx/WBNRUsnZA8pXRpVxB7Pf8ar29XI158V4+t1GEqkCl5MYZhcOMTi5fa3yYr0Vcya6vUkA==',
   '20e009a52cd91dc7dc7a8d7da525fed5': '+PC/htwSB6pz4VRTcGL1iN74xlqoX6Q2oilsraVvSVefL+lr0tW1+/pOGQpdZpXtN20DjfbC0s4rHYZD2z924Q=='

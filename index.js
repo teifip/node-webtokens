@@ -4,23 +4,19 @@ const responder = require('./lib/common.js').responder;
 
 // ===== TOKEN GENERATION =====================================================
 
-exports.generate = function(alg, p1, p2, p3, p4, p5) {
-  if (p1.constructor === {}.constructor) {
+exports.generate = function(alg, ...rest) {
+  if (rest[0].constructor === Object) {
     // alg, payload, key[, cb] or alg, payload, keystore, kid[, cb]
-    return jws.generate(alg, p1, p2, p3, p4);
+    return jws.generate(alg, ...rest);
   }
-  if (p2.constructor === {}.constructor) {
+  if (rest[1].constructor === Object) {
     // alg, enc, payload, key[, cb] or alg, enc, payload, keystore, kid[, cb]
-    return jwe.generate(alg, p1, p2, p3, p4, p5);
+    return jwe.generate(alg, ...rest);
   }
-  // there is no payload where expected
-  let error = new TypeError('Invalid payload');
-  if (typeof p5 === 'function') {
-    p5(error);
-  } else if (typeof p4 === 'function') {
-    p4(error);
-  } else if (typeof p3 === 'function') {
-    p3(error);
+  // There is no payload object where expected
+  let idx = rest.length - 1;
+  if (idx > 1 && idx < 5 && typeof rest[idx] === 'function') {
+    rest[idx](error);
   } else {
     throw error;
   }
@@ -33,78 +29,75 @@ exports.parse = function(token) {
 }
 
 function ParsedToken(token) {
-	this.parts = [];
-	if (typeof token === 'string') {
-		this.parts = token.split('.');
-	}
-	if (this.parts.length === 3) {
-		this.type = 'JWS';
-	} else if (this.parts.length === 5) {
-		this.type = 'JWE';
-	} else {
-		this.error = { message: 'Invalid token' };
-		return;
-	}
-	try {
-		this.header = JSON.parse(Buffer.from(this.parts[0], 'base64'));
-	} catch (error) {
-		this.error = { message: `Non parsable header. ${error.message}` };
-		return;
-	}
-	if (this.type === 'JWS') {
-    // parsing exposes payload for JWS only; for JWE happens at verify
-		try {
-			this.payload = JSON.parse(Buffer.from(this.parts[1], 'base64'));
-		} catch (error) {
-	    this.error = { message: `Non parsable payload. ${error.message}` };
-		}
-	}
+  this.parts = typeof token === 'string' ? token.split('.') : [];
+  if (this.parts.length === 3) {
+    this.type = 'JWS';
+  } else if (this.parts.length === 5) {
+    this.type = 'JWE';
+  } else {
+    this.error = { message: 'Invalid token' };
+    return;
+  }
+  try {
+    this.header = JSON.parse(Buffer.from(this.parts[0], 'base64'));
+  } catch (error) {
+    this.error = { message: `Non parsable header. ${error.message}` };
+    return;
+  }
+  if (this.type === 'JWS') {
+    // Parsing exposes payload for JWS only; for JWE happens at verify
+    try {
+      this.payload = JSON.parse(Buffer.from(this.parts[1], 'base64'));
+    } catch (error) {
+      this.error = { message: `Non parsable payload. ${error.message}` };
+    }
+  }
 }
 
 // ===== POST-PARSING UTLITIES ================================================
 
 ParsedToken.prototype.setAlgorithmList = function(algList, encList) {
-  // algList ignored if not string or array of strings
+  // algList is ignored if not string or array of strings
   if (typeof algList === 'string') {
     this.algList = [algList];
   } else if (Array.isArray(algList)) {
-		this.algList = algList;
-	}
-  // encList ignored if not string or array of strings
+    this.algList = algList;
+  }
+  // encList is ignored if not string or array of strings
   if (typeof encList === 'string') {
     this.encList = [encList];
   } else if (Array.isArray(encList)) {
-		this.encList = encList;
-	}
-	return this;
+    this.encList = encList;
+  }
+  return this;
 }
 
 ParsedToken.prototype.setTokenLifetime = function(lifetime) {
-  // lifetime ignored if not integer greater than 0
+  // lifetime is ignored if not integer greater than 0
   if (Number.isInteger(lifetime) && lifetime > 0) {
-		this.lifetime = lifetime;
-	}
+    this.lifetime = lifetime;
+  }
   return this;
 }
 
 ParsedToken.prototype.setAudience = function(audList) {
-  // audList ignored if not string or array of strings
+  // audList is ignored if not string or array of strings
   if (typeof audList === 'string') {
     this.audList = [audList];
   } else if (Array.isArray(audList)) {
-		this.audList = audList;
-	}
-	return this;
+    this.audList = audList;
+  }
+  return this;
 }
 
 ParsedToken.prototype.setIssuer = function(issList) {
-  // issList ignored if not string or array of strings
+  // issList is ignored if not string or array of strings
   if (typeof issList === 'string') {
     this.issList = [issList];
   } else if (Array.isArray(issList)) {
-		this.issList = issList;
-	}
-	return this;
+    this.issList = issList;
+  }
+  return this;
 }
 
 // ===== TOKEN VERIFICATION ===================================================
@@ -113,14 +106,14 @@ ParsedToken.prototype.verify = function(p0, cb) {
   // key[, cb] or keystore[, cb]
   cb = typeof cb === 'function' ? cb : undefined;
   let key;
-  if (p0.constructor !== {}.constructor) {
+  if (p0.constructor !== Object) {
     key = p0;
   } else if (this.header.kid === undefined) {
-    // cannot extract key from keystore
-    this.error = { message: 'Missing kid claim in header' }
+    // Cannot extract key from keystore
+    this.error = { message: 'Missing kid claim in header' };
     return responder(null, this, cb);
   } else if (p0[this.header.kid] === undefined) {
-    // key not found in keystore
+    // Key not found in keystore
     this.error = { message: 'Key with id not found', kid: this.header.kid };
     return responder(null, this, cb);
   } else {

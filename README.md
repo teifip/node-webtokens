@@ -59,7 +59,7 @@ parsedToken = jwt.parse(token).verify(keystore);
 
 ### Opinionated
 
-There are various packages in [npm](https://www.npmjs.com/) that cover the [IETF JOSE](https://datatracker.ietf.org/wg/jose/documents/) scope striving for generality and flexibility. This specific package is shaped after the following strong assumptions, which somehow restrict its usability:
+There are various [npm](https://www.npmjs.com/) packages that cover the [IETF JOSE](https://datatracker.ietf.org/wg/jose/documents/) scope striving for generality and flexibility. This specific package is shaped after the following strong assumptions, which somehow restrict its usability:
 
 - No effort to ensure compatibility with older [Node.js](https://nodejs.org) versions. Most stringent requirement comes from the use of `crypto.timingSafeEqual()`, which is not available in [Node.js](https://nodejs.org) versions prior to v6.6.0;
 - The [JWS](https://tools.ietf.org/html/rfc7515)/[JWE](https://tools.ietf.org/html/rfc7516) payload must be a JavaScript object (a.k.a. hash or dictionary);
@@ -135,9 +135,9 @@ jwt.generate('PBES2-HS512+A256KW', 'A256GCM', payload, pwd, (error, token) => {
 });
 ```
 
-All the [Node.js](https://nodejs.org) crypto functions used in this package are synchronous, with the exception of [PBKDF2](https://tools.ietf.org/html/rfc8018), which can be invoked either synchronously as `crypto.pbkdf2Sync()` or asynchronously as `crypto.pbkdf2()`. This implies that the use of the asynchronous API mode makes a difference in terms of execution only when one of the algorithms based on [PBKDF2](https://tools.ietf.org/html/rfc8018) is selected, namely  `PBES2-HS256+A128KW`, `PBES2-HS384+A192KW` or `PBES2-HS512+A256KW`.   
+All the [Node.js](https://nodejs.org) crypto functions used in this package are synchronous, with the exception of [PBKDF2](https://tools.ietf.org/html/rfc8018), which can be invoked either synchronously as `crypto.pbkdf2Sync()` or asynchronously as `crypto.pbkdf2()`. This implies that the use of the asynchronous API mode makes a real difference in terms of execution only when one of the algorithms based on [PBKDF2](https://tools.ietf.org/html/rfc8018) is selected, namely  `PBES2-HS256+A128KW`, `PBES2-HS384+A192KW` or `PBES2-HS512+A256KW`.   
 
-> Use of the token generation and token verification APIs in asynchronous mode is recommended for [JWE](https://tools.ietf.org/html/rfc7516) when the selected key management algorithm is `PBES2-HS256+A128KW`, `PBES2-HS384+A192KW` or `PBES2-HS512+A256KW`.
+> Use of the token generation and token verification APIs in asynchronous mode is recommended for [JWE](https://tools.ietf.org/html/rfc7516) when the selected key management algorithm is `PBES2-HS256+A128KW`, `PBES2-HS384+A192KW` or `PBES2-HS512+A256KW`. Conversely, use of the synchronous mode is preferable for [JWS](https://tools.ietf.org/html/rfc7515) and for all other [JWE](https://tools.ietf.org/html/rfc7516) cases.
 
 ### Token generation
 
@@ -198,7 +198,7 @@ The `setAudience` method can be used to configure the acceptable values of the `
 
 The `setAudience` method does not throw errors. If `audList` is not a string or an array of strings, then the action is simply ignored.
 
-> Token verification enforces the presence of the `aud` claim in the token payload only if the `setAudience` method is invoked before proceeding with teh verification.
+> Token verification enforces the presence of the `aud` claim in the token payload only if the `setAudience` method is invoked before proceeding with the verification.
 
 **parsedToken.setIssuer(issList)**
 
@@ -206,7 +206,7 @@ The `setIssuer` method can be used to configure the acceptable values of the `is
 
 The `setIssuer` method does not throw errors. If `issList` is not a string or an array of strings, then the action is simply ignored.
 
-> Token verification enforces the presence of the `iss` claim in the token payload only if the `setIssuer` method is invoked before proceeding with teh verification.
+> Token verification enforces the presence of the `iss` claim in the token payload only if the `setIssuer` method is invoked before proceeding with the verification.
 
 **parsedToken.verify(key[, callback])**   
 **parsedToken.verify(keystore[, callback])**
@@ -245,7 +245,7 @@ if (parsedToken.error) {
 Token generated/verified with individual key:
 
 ```javascript
-const jwt = require('../index.js');
+const jwt = require('node-webtokens');
 
 var key = getKeyFromSomewhere();
 

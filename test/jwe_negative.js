@@ -21,7 +21,7 @@ const payload = {
   aud: 'A1B2C3D4E5.com.mydomain.myservice',
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
-  list: [1, 2, 3]
+  list: [1, 2, 3, 4]
 }
 
 const cases = [

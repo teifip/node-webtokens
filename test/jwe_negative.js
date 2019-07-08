@@ -22,7 +22,7 @@ const payload = {
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
   list: [1, 2, 3, 4]
-}
+};
 
 const cases = [
   {alg: 'dir', enc: 'A128CBC-HS256', eKey: simKey, vKey: simKey},

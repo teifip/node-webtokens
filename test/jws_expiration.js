@@ -12,7 +12,7 @@ const payload = {
   info: 'Hello World!',
   list: [1, 2, 3, 4],
   exp: Math.floor(Date.now() / 1000) + 4  // expires in 4 seconds
-}
+};
 
 let token = jwt.generate('HS512', payload, key);
 

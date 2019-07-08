@@ -9,7 +9,7 @@ const payload = {
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
   list: [1, 2, 3, 4]
-}
+};
 
 let token = jwt.generate('HS512', payload, key);
 

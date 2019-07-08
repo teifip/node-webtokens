@@ -21,7 +21,7 @@ const payload = {
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
   list: [1, 2, 3, 4]
-}
+};
 
 const cases = [
   {alg: 'HS256', sKey: simKey, vKey: simKey},

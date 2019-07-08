@@ -393,7 +393,7 @@ jwt.generate('PBES2-HS512+A256KW', 'A256GCM', payload, key, (error, token) => {
 });
 ```
 
-> With [PBES2](https://tools.ietf.org/html/rfc7518#section-4.8), key derivation at token generation time performs 1000 [PBKDF2](https://tools.ietf.org/html/rfc8018) iterations. Hence the recommendation to use the asynchronous mode.
+> With [PBES2](https://tools.ietf.org/html/rfc7518#section-4.8), key derivation at token generation time performs 1024 [PBKDF2](https://tools.ietf.org/html/rfc8018) iterations. Hence the recommendation to use the asynchronous mode.
 
 Token verification with asynchronous API:
 
@@ -404,7 +404,7 @@ jwt.parse(token).setTokenLifetime(600).verify(key, (error, parsed) => {
     console.log(parsed.header);
     /* { alg: 'PBES2-HS512+A256KW',
          enc: 'A256GCM',
-         p2c: 1000,
+         p2c: 1024,
          p2s: 'UEJFUzItSFM1MTIrQTI1NktXADct7gg2MjXk' } */
     console.log(parsed.payload);
     /* { iss: 'auth.mydomain.com',
@@ -416,7 +416,7 @@ jwt.parse(token).setTokenLifetime(600).verify(key, (error, parsed) => {
   });
 ```
 
-> With [PBES2](https://tools.ietf.org/html/rfc7518#section-4.8), key derivation at token verification time performs the number of [PBKDF2](https://tools.ietf.org/html/rfc8018) iterations indicated by the `p2c` claim in the [JWE](https://tools.ietf.org/html/rfc7516) header. For protection against bogus tokens, the token verification API rejects `p2c` values larger than 1000 when used in synchronous mode or 10000 when used in asynchronous mode.
+> With [PBES2](https://tools.ietf.org/html/rfc7518#section-4.8), key derivation at token verification time performs the number of [PBKDF2](https://tools.ietf.org/html/rfc8018) iterations indicated by the `p2c` claim in the [JWE](https://tools.ietf.org/html/rfc7516) header. For protection against bogus tokens, the token verification API rejects `p2c` values larger than 1024 when used in synchronous mode or 16384 when used in asynchronous mode.
 
 ### Credits
 

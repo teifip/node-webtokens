@@ -9,7 +9,7 @@ const payload = {
   sub: 'jack.sparrow@example.com',
   info: 'Hello World!',
   list: [1, 2, 3, 4]
-}
+};
 
 console.log('\nTOKEN GENERATED/VERIFIED WITH INDIVIDUAL KEY\n');
 

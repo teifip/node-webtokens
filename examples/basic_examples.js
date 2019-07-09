@@ -14,11 +14,14 @@ const payload = {
 console.log('\nTOKEN GENERATED/VERIFIED WITH INDIVIDUAL KEY\n');
 
 let token = jwt.generate('HS512', payload, key);
+console.log('Sample JWS token (HS512)\n');
 console.log(token);
 
 let parsed = jwt.parse(token).verify(key);
-console.log(parsed.valid);
+console.log('\nToken is valid:', parsed.valid);
+console.log('\nHeader:\n');
 console.log(parsed.header);
+console.log('\nPayload:\n');
 console.log(parsed.payload);
 
 console.log('\nTOKEN GENERATED/VERIFIED WITH KEY FROM KEYSTORE\n');
@@ -30,10 +33,12 @@ let keystore = {
 };
 
 token = jwt.generate('HS512', payload, keystore, 'f0fd89c4abe83811ee9afa92d0d687f7');
+console.log('Sample JWS token (HS512)\n');
 console.log(token);
 
 parsed = jwt.parse(token).verify(keystore);
-console.log(parsed.valid);
+console.log('\nToken is valid:', parsed.valid);
+console.log('\nHeader:\n');
 console.log(parsed.header);
 
 console.log('\nVERIFICATION KEY NOT FOUND IN KEYSTORE\n');
@@ -60,11 +65,15 @@ console.log('\nPARSING AND VERIFICATION AS SEPARATE STEPS - JWS EXAMPLE\n');
 token = jwt.generate('HS512', payload, key);
 
 parsed = jwt.parse(token);
+console.log('\nHeader after parsing:\n');
 console.log(parsed.header);
+console.log('\nPayload after parsing:\n');
 console.log(parsed.payload);
 
 parsed.setTokenLifetime(600).verify(key);
+console.log('\nHeader after verification (unchanged):\n');
 console.log(parsed.header);
+console.log('\nPayload after verification (unchanged):\n');
 console.log(parsed.payload);
 
 console.log('\nPARSING AND VERIFICATION AS SEPARATE STEPS - JWE EXAMPLE\n');
@@ -72,11 +81,15 @@ console.log('\nPARSING AND VERIFICATION AS SEPARATE STEPS - JWE EXAMPLE\n');
 token = jwt.generate('A256KW', 'A256GCM', payload, key);
 
 parsed = jwt.parse(token);
+console.log('\nHeader after parsing:\n');
 console.log(parsed.header);
+console.log('\nPayload after parsing:\n');
 console.log(parsed.payload);
 
 parsed.setTokenLifetime(600).verify(key);
+console.log('\nHeader after verification (unchanged) :\n');
 console.log(parsed.header);
+console.log('\nPayload after verification (now visible):\n');
 console.log(parsed.payload);
 
 console.log('\nEXPIRED TOKEN\n');
@@ -85,5 +98,5 @@ token = jwt.generate('HS512', payload, key);
 
 setTimeout(() => {
   parsed = jwt.parse(token).setTokenLifetime(3).verify(key);
-  console.log(parsed.expired);
+  console.log('Expired:', parsed.expired);
 }, 5000);

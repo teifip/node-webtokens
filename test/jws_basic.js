@@ -22,7 +22,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {
     alg: 'HS256',
     sKey: simKey,
@@ -244,39 +244,37 @@ const cases = [
 console.log('\nBASIC TEST CASES - SYNCHRONOUS MODE\n');
 let token;
 let result;
-for (let i in cases) {
-  token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
+for (let test of tests) {
+  token = jwt.generate(test.alg, payload, test.sKey);
   result = jwt.parse(token)
               .setTokenLifetime(60000)
-              .verify(cases[i].vKey);
+              .verify(test.vKey);
   if (result.error) {
-    console.log(`[NOK] ${cases[i].alg}, ${cases[i].label}`);
+    console.log(`[NOK] ${test.alg}, ${test.label}`);
     console.log(result);
     process.exit();
   }
-  console.log(`[OK] ${cases[i].alg}, ${cases[i].label}`);
+  console.log(`[OK] ${test.alg}, ${test.label}`);
 }
 
 console.log('\nBASIC TEST CASES - ASYNCHRONOUS MODE\n');
 executeCaseAsync(0);
 
-function executeCaseAsync(i) {
-  if (i === cases.length) {
-    process.exit();
-  }
-  jwt.generate(cases[i].alg, payload, cases[i].sKey, (error, token) => {
+function executeCaseAsync(idx) {
+  if (idx === tests.length) process.exit();
+  jwt.generate(test.alg, payload, test.sKey, (error, token) => {
     if (error) throw error;
     jwt.parse(token)
        .setTokenLifetime(60000)
-       .verify(cases[i].vKey, (error, result) => {
+       .verify(test.vKey, (error, result) => {
       if (error) throw error;
       if (result.error) {
-        console.log(`[NOK] ${cases[i].alg}, ${cases[i].label}`);
+        console.log(`[NOK] ${test.alg}, ${test.label}`);
         console.log(result);
         process.exit();
       }
-      console.log(`[OK] ${cases[i].alg}, ${cases[i].label}`);
-      executeCaseAsync(++i);
+      console.log(`[OK] ${test.alg}, ${test.label}`);
+      executeCaseAsync(++idx);
     });
   });
 }

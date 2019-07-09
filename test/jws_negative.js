@@ -23,7 +23,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {alg: 'HS256', sKey: simKey, vKey: simKey},
   {alg: 'HS384', sKey: simKey, vKey: simKey},
   {alg: 'HS512', sKey: simKey, vKey: simKey},
@@ -40,12 +40,12 @@ let validToken;
 let parsed;
 let key;
 
-for (let i in cases) {
-  console.log(`\n${cases[i].alg}`);
-  validToken = jwt.generate(cases[i].alg, payload, cases[i].sKey);
+for (let test of tests) {
+  console.log(`\n${test.alg}`);
+  validToken = jwt.generate(test.alg, payload, test.sKey);
   // no alg in header
   token = removeAlgFromHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Missing or invalid alg claim in header')) {
     console.log(`[OK] missing alg claim`);
@@ -57,7 +57,7 @@ for (let i in cases) {
 
   // unrecognized alg in header
   token = messupAlgInHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Unrecognized algorithm')) {
     console.log(`[OK] unrecognized alg claim`);
   } else {
@@ -69,7 +69,7 @@ for (let i in cases) {
   // unwanted alg in header
   parsed = jwt.parse(validToken)
               .setAlgorithmList(['dummy1', 'dummy2'])
-              .verify(cases[i].vKey);
+              .verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Unwanted algorithm')) {
     console.log(`[OK] unwanted alg claim`);
   } else {
@@ -80,7 +80,7 @@ for (let i in cases) {
 
   // tampered header
   token = tamperHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Integrity check failed')) {
     console.log(`[OK] tampered header`);
   } else {
@@ -91,7 +91,7 @@ for (let i in cases) {
 
   // tampered payload
   token = tamperPayload(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Integrity check failed')) {
     console.log(`[OK] tampered payload`);
   } else {
@@ -101,8 +101,8 @@ for (let i in cases) {
   }
 
   // check with wrong key
-  key = messupVerificationKey(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKey(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Integrity check failed')) {
     console.log(`[OK] wrong key`);
   } else {
@@ -112,8 +112,8 @@ for (let i in cases) {
   }
 
   // check with invalid key type
-  key = messupVerificationKeyType(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKeyType(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Integrity check failed')) {
     console.log(`[OK] wrong key type`);
   } else {
@@ -123,8 +123,8 @@ for (let i in cases) {
   }
 
   // check with invalid key length
-  key = messupVerificationKeyLength(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKeyLength(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error && parsed.error.message.includes('Integrity check failed')) {
     console.log(`[OK] wrong key length`);
   } else {

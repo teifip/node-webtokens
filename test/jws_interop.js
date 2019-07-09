@@ -30,7 +30,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {alg: 'HS256', sKey: simKey, vKey: simKey},
   {alg: 'HS384', sKey: simKey, vKey: simKey},
   {alg: 'HS512', sKey: simKey, vKey: simKey},
@@ -47,30 +47,30 @@ let parsed;
 let result;
 
 console.log('\nGENERATION WITH node-webtokens / VERIFICATION WITH jws\n');
-for (let i in cases) {
-  token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
+for (let test of tests) {
+  token = jwt.generate(test.alg, payload, test.sKey);
   parsed = jws.decode(token);
-  if(jws.verify(token, parsed.header.alg, cases[i].vKey)) {
-    console.log(`[OK] ${cases[i].alg}`);
+  if(jws.verify(token, parsed.header.alg, test.vKey)) {
+    console.log(`[OK] ${test.alg}`);
   } else {
-    console.log(`[NOK] ${cases[i].alg}`);
+    console.log(`[NOK] ${test.alg}`);
     process.exit();
   }
 }
 
 console.log('\nGENERATION WITH jws / VERIFICATION WITH node-webtokens\n');
-for (let i in cases) {
+for (let test of tests) {
   payload.iat = Date.now();
   token = jws.sign({
-    header: {alg: cases[i].alg},
+    header: {alg: test.alg},
     payload: payload,
-    secret: cases[i].sKey
+    secret: test.sKey
   });
-  result = jwt.parse(token).verify(cases[i].vKey);
+  result = jwt.parse(token).verify(test.vKey);
   if (result.error) {
-    console.log(`[NOK] ${cases[i].alg}`);
+    console.log(`[NOK] ${test.alg}`);
     process.exit();
   } else {
-    console.log(`[OK] ${cases[i].alg}`);
+    console.log(`[OK] ${test.alg}`);
   }
 }

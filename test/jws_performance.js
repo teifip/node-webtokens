@@ -23,7 +23,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {alg: 'HS256', sKey: simKey, vKey: simKey},
   {alg: 'HS384', sKey: simKey, vKey: simKey},
   {alg: 'HS512', sKey: simKey, vKey: simKey},
@@ -41,31 +41,28 @@ let token;
 let result;
 
 console.log(`\nGENERATION OF ${ITER} TOKENS\n`);
-for (let i in cases) {
+for (let test of tests) {
   start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
-    token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
+    token = jwt.generate(test.alg, payload, test.sKey);
   }
   delta = process.hrtime(start);
-  console.log(`${cases[i].alg} in ${formatResult(delta)}`);
+  console.log(`${test.alg} in ${formatResult(delta)}`);
 }
 
 console.log(`\nVERIFICATION OF ${ITER} TOKENS\n`);
-for (let i in cases) {
-  token = jwt.generate(cases[i].alg, payload, cases[i].sKey);
+for (let test of tests) {
+  token = jwt.generate(test.alg, payload, test.sKey);
   start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
-    result = jwt.parse(token).setTokenLifetime(60000).verify(cases[i].vKey);
+    result = jwt.parse(token).setTokenLifetime(60).verify(test.vKey);
   }
   delta = process.hrtime(start);
-  console.log(`${cases[i].alg} in ${formatResult(delta)}`);
+  console.log(`${test.alg} in ${formatResult(delta)}`);
 }
 
 function formatResult(delta) {
   let ms = delta[0] * 1e3 + delta[1] * 1e-6;
-  if (ms < 1000) {
-    return `${ms.toFixed(1)} ms`;
-  } else {
-    return `${(ms / 1000).toFixed(3)} s`;
-  }
+  if (ms < 1000) return `${ms.toFixed(1)} ms`;
+  return `${(ms / 1000).toFixed(3)} s`;
 }

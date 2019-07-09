@@ -14,13 +14,16 @@ const payload = {
 console.log('\nTOKEN GENERATION WITH ASYNCHRONOUS API\n');
 
 jwt.generate('PBES2-HS512+A256KW', 'A256GCM', payload, key, (error, token) => {
+  console.log('Sample JWE token (PBES2-HS512+A256KW, A256GCM)\n');
   console.log(token);
 
   console.log('\nTOKEN VERIFICATION WITH ASYNCHRONOUS API\n');
 
   jwt.parse(token).setTokenLifetime(600).verify(key, (error, parsed) => {
-    console.log(parsed.valid);
+    console.log('Token is valid:', parsed.valid);
+    console.log('\nHeader:\n');
     console.log(parsed.header);
+    console.log('\nPayload\n');
     console.log(parsed.payload);
   });
 });

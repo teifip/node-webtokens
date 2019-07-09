@@ -24,7 +24,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {alg: 'dir', enc: 'A128CBC-HS256', eKey: simKey, vKey: simKey},
   {alg: 'dir', enc: 'A192CBC-HS384', eKey: simKey, vKey: simKey},
   {alg: 'dir', enc: 'A256CBC-HS512', eKey: simKey, vKey: simKey},
@@ -80,13 +80,13 @@ let validToken;
 let parsed;
 let key;
 
-for (let i in cases) {
-  console.log(`\n${cases[i].alg}, ${cases[i].enc}`);
-  validToken = jwt.generate(cases[i].alg, cases[i].enc, payload, cases[i].eKey);
+for (let test of tests) {
+  console.log(`\n${test.alg}, ${test.enc}`);
+  validToken = jwt.generate(test.alg, test.enc, payload, test.eKey);
 
   // no alg in header
   token = removeAlgFromHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Missing or invalid alg claim in header')) {
     console.log(`[OK] missing alg claim`);
@@ -98,7 +98,7 @@ for (let i in cases) {
 
   // unrecognized alg in header
   token = messupAlgInHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Unrecognized key management algorithm')) {
     console.log(`[OK] unrecognized alg claim`);
@@ -110,8 +110,8 @@ for (let i in cases) {
 
   // unwanted alg in header
   parsed = jwt.parse(validToken)
-              .setAlgorithmList(['dummy1', 'dummy2'], cases[i].enc)
-              .verify(cases[i].vKey);
+              .setAlgorithmList(['dummy1', 'dummy2'], test.enc)
+              .verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Unwanted key management algorithm')) {
     console.log(`[OK] unwanted alg claim`);
@@ -123,7 +123,7 @@ for (let i in cases) {
 
   // no enc in header
   token = removeEncFromHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Missing or invalid enc claim in header')) {
     console.log(`[OK] missing enc claim`);
@@ -135,7 +135,7 @@ for (let i in cases) {
 
   // unrecognized enc in header
   token = messupEncInHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Unrecognized content encryption algorithm')) {
     console.log(`[OK] unrecognized enc claim`);
@@ -147,8 +147,8 @@ for (let i in cases) {
 
   // unwanted enc in header
   parsed = jwt.parse(validToken)
-              .setAlgorithmList(cases[i].alg, ['dummy1', 'dummy2'])
-              .verify(cases[i].vKey);
+              .setAlgorithmList(test.alg, ['dummy1', 'dummy2'])
+              .verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Unwanted content encryption algorithm')) {
     console.log(`[OK] unwanted enc claim`);
@@ -160,7 +160,7 @@ for (let i in cases) {
 
   // tampered header
   token = tamperHeader(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] tampered header`);
@@ -172,7 +172,7 @@ for (let i in cases) {
 
   // tampered payload
   token = tamperPayload(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] tampered payload`);
@@ -184,7 +184,7 @@ for (let i in cases) {
 
   // tampered initialization vector
   token = tamperIv(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] tampered initialization vector`);
@@ -196,7 +196,7 @@ for (let i in cases) {
 
   // tampered authentication tag
   token = tamperTag(validToken);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] tampered authentication tag`);
@@ -207,8 +207,8 @@ for (let i in cases) {
   }
 
   // check with wrong key
-  key = messupVerificationKey(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKey(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] wrong key`);
@@ -219,8 +219,8 @@ for (let i in cases) {
   }
 
   // check with invalid key type
-  key = messupVerificationKeyType(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKeyType(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] wrong key type`);
@@ -231,8 +231,8 @@ for (let i in cases) {
   }
 
   // check with invalid key length
-  key = messupVerificationKeyLength(cases[i].vKey);
-  parsed = jwt.parse(token).verify(cases[i].vKey);
+  key = messupVerificationKeyLength(test.vKey);
+  parsed = jwt.parse(token).verify(test.vKey);
   if (parsed.error &&
       parsed.error.message.includes('Could not decrypt token')) {
     console.log(`[OK] wrong key length`);

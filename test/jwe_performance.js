@@ -24,7 +24,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {alg: 'dir', enc: 'A128CBC-HS256', eKey: simKey, vKey: simKey},
   {alg: 'dir', enc: 'A192CBC-HS384', eKey: simKey, vKey: simKey},
   {alg: 'dir', enc: 'A256CBC-HS512', eKey: simKey, vKey: simKey},
@@ -81,31 +81,28 @@ let token;
 let result;
 
 console.log(`\nGENERATION OF ${ITER} TOKENS\n`);
-for (let i in cases) {
+for (let test of tests) {
   start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
-    token = jwt.generate(cases[i].alg, cases[i].enc, payload, cases[i].eKey);
+    token = jwt.generate(test.alg, test.enc, payload, test.eKey);
   }
   delta = process.hrtime(start);
-  console.log(`${cases[i].alg} / ${cases[i].enc} in ${formatResult(delta)}`);
+  console.log(`${test.alg} / ${test.enc} in ${formatResult(delta)}`);
 }
 
 console.log(`\nVERIFICATION OF ${ITER} TOKENS\n`);
-for (let i in cases) {
-  token = jwt.generate(cases[i].alg, cases[i].enc, payload, cases[i].eKey);
+for (let test of tests) {
+  token = jwt.generate(test.alg, test.enc, payload, test.eKey);
   start = process.hrtime();
   for (let j = 0; j < ITER; j++) {
-    result = jwt.parse(token).setTokenLifetime(60000).verify(cases[i].vKey);
+    result = jwt.parse(token).setTokenLifetime(60000).verify(test.vKey);
   }
   delta = process.hrtime(start);
-  console.log(`${cases[i].alg} / ${cases[i].enc} in ${formatResult(delta)}`);
+  console.log(`${test.alg} / ${test.enc} in ${formatResult(delta)}`);
 }
 
 function formatResult(delta) {
   let ms = delta[0] * 1e3 + delta[1] * 1e-6;
-  if (ms < 1000) {
-    return `${ms.toFixed(1)} ms`;
-  } else {
-    return `${(ms / 1000).toFixed(3)} s`;
-  }
+  if (ms < 1000) return `${ms.toFixed(1)} ms`;
+  return `${(ms / 1000).toFixed(3)} s`;
 }

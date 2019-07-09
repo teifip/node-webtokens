@@ -23,7 +23,7 @@ const payload = {
   list: [1, 2, 3, 4]
 };
 
-const cases = [
+const tests = [
   {
     alg: 'dir',
     enc: 'A128CBC-HS256',
@@ -1373,40 +1373,38 @@ const cases = [
 console.log('\nBASIC TEST CASES - SYNCHRONOUS MODE\n');
 let token;
 let result;
-for (let i in cases) {
-  token = jwt.generate(cases[i].alg, cases[i].enc, payload, cases[i].eKey);
+for (let test of tests) {
+  token = jwt.generate(test.alg, test.enc, payload, test.eKey);
   result = jwt.parse(token)
               .setTokenLifetime(60000)
-              .verify(cases[i].vKey);
+              .verify(test.vKey);
   if (result.error) {
-    console.log(`[NOK] ${cases[i].alg}, ${cases[i].enc}, ${cases[i].label}`);
+    console.log(`[NOK] ${test.alg}, ${test.enc}, ${test.label}`);
     console.log(result);
     process.exit();
   }
-  console.log(`[OK] ${cases[i].alg}, ${cases[i].enc}, ${cases[i].label}`);
+  console.log(`[OK] ${test.alg}, ${test.enc}, ${test.label}`);
 }
 
 console.log('\nBASIC TEST CASES - ASYNCHRONOUS MODE\n');
 executeCaseAsync(0);
 
-function executeCaseAsync(i) {
-  if (i === cases.length) {
-    process.exit();
-  }
-  let key = cases[i].eKey;
-  jwt.generate(cases[i].alg, cases[i].enc, payload, key, (error, token) => {
+function executeCaseAsync(idx) {
+  if (idx === tests.length) process.exit();
+  let test = tests[idx];
+  jwt.generate(test.alg, test.enc, payload, test.eKey, (error, token) => {
     if (error) throw error;
     jwt.parse(token)
        .setTokenLifetime(60000)
-       .verify(cases[i].vKey, (error, result) => {
+       .verify(test.vKey, (error, result) => {
       if (error) throw error;
       if (result.error) {
-        console.log(`[NOK] ${cases[i].alg}, ${cases[i].enc}, ${cases[i].label}`);
+        console.log(`[NOK] ${test.alg}, ${test.enc}, ${test.label}`);
         console.log(result);
         process.exit();
       }
-      console.log(`[OK] ${cases[i].alg}, ${cases[i].enc}, ${cases[i].label}`);
-      executeCaseAsync(++i);
+      console.log(`[OK] ${test.alg}, ${test.enc}, ${test.label}`);
+      executeCaseAsync(++idx);
     });
   });
 }

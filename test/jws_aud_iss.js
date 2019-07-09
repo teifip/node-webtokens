@@ -52,7 +52,7 @@ if (parsed.error && parsed.error.message.includes('Mismatching aud claim')) {
 }
 
 parsed = jwt.parse(token)
-            .setAudience(['AABBCCDDEE.com.mydomain.myservice'])
+            .setAudience([ 'AABBCCDDEE.com.mydomain.myservice' ])
             .verify(key);
 
 if (parsed.error && parsed.error.message.includes('Mismatching aud claim')) {
@@ -98,7 +98,7 @@ if (parsed.error && parsed.error.message.includes('Mismatching iss claim')) {
 }
 
 parsed = jwt.parse(token)
-            .setIssuer(['auth.mydomain.com', 'aaaa.mydomain.com'])
+            .setIssuer([ 'auth.mydomain.com', 'aaaa.mydomain.com' ])
             .verify(key);
 
 if (!parsed.error) {

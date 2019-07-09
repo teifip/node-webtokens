@@ -262,6 +262,7 @@ executeCaseAsync(0);
 
 function executeCaseAsync(idx) {
   if (idx === tests.length) process.exit();
+  let test = tests[idx];
   jwt.generate(test.alg, payload, test.sKey, (error, token) => {
     if (error) throw error;
     jwt.parse(token)

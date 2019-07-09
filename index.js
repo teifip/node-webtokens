@@ -1,18 +1,14 @@
 const jws = require('./lib/jws.js');
 const jwe = require('./lib/jwe.js');
-const responder = require('./lib/common.js').responder;
+const { responder } = require('./lib/common.js');
 
 // ===== TOKEN GENERATION =====================================================
 
-exports.generate = function(alg, ...rest) {
-  if (rest[0].constructor === Object) {
-    // alg, payload, key[, cb] or alg, payload, keystore, kid[, cb]
-    return jws.generate(alg, ...rest);
-  }
-  if (rest[1].constructor === Object) {
-    // alg, enc, payload, key[, cb] or alg, enc, payload, keystore, kid[, cb]
-    return jwe.generate(alg, ...rest);
-  }
+exports.generate = (alg, ...rest) => {
+  // alg, payload, key[, cb] or alg, payload, keystore, kid[, cb]
+  if (rest[0].constructor === Object) return jws.generate(alg, ...rest);
+  // alg, enc, payload, key[, cb] or alg, enc, payload, keystore, kid[, cb]
+  if (rest[1].constructor === Object) return jwe.generate(alg, ...rest);
   // There is no payload object where expected
   let idx = rest.length - 1;
   if (idx > 1 && idx < 5 && typeof rest[idx] === 'function') {
@@ -24,9 +20,7 @@ exports.generate = function(alg, ...rest) {
 
 // ===== TOKEN PARSING ========================================================
 
-exports.parse = function(token) {
-  return new ParsedToken(token);
-}
+exports.parse = (token) => new ParsedToken(token);
 
 function ParsedToken(token) {
   this.parts = typeof token === 'string' ? token.split('.') : [];
@@ -74,9 +68,7 @@ ParsedToken.prototype.setAlgorithmList = function(algList, encList) {
 
 ParsedToken.prototype.setTokenLifetime = function(lifetime) {
   // lifetime is ignored if not integer greater than 0
-  if (Number.isInteger(lifetime) && lifetime > 0) {
-    this.lifetime = lifetime;
-  }
+  if (Number.isInteger(lifetime) && lifetime > 0) this.lifetime = lifetime;
   return this;
 }
 
@@ -119,7 +111,6 @@ ParsedToken.prototype.verify = function(p0, cb) {
   } else {
     key = p0[this.header.kid];
   }
-  return this.type === 'JWS'
-         ? jws.verify(this, key, cb)
-         : jwe.verify(this, key, cb);
+  let verify = this.type === 'JWS' ? jws.verify : jwe.verify;
+  return verify(this, key, cb);
 }

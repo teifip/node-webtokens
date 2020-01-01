@@ -97,6 +97,7 @@ ParsedToken.prototype.setIssuer = function(issList) {
 ParsedToken.prototype.verify = function(p0, cb) {
   // key[, cb] or keystore[, cb]
   cb = typeof cb === 'function' ? cb : undefined;
+  if (this.error) return responder(null, this, cb);
   let key;
   if (p0.constructor !== Object) {
     key = p0;
